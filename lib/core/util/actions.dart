@@ -14,7 +14,7 @@ void showProgressDialog({
             text,
             style: TextStyle(
               fontSize: 28,
-              color: Colors.blue,
+              color: Colors.green,
             ),
           ),
         ),
@@ -32,7 +32,7 @@ void showSnackBar({
 }) {
   Scaffold.of(context).showSnackBar(
     SnackBar(
-      backgroundColor: Colors.blue,
+      backgroundColor: Colors.green,
       content: Text(
         message,
         style: TextStyle(
@@ -59,7 +59,7 @@ void showAlertDialog({
             textAlign: TextAlign.center,
             style: TextStyle(
               fontSize: 20,
-              color: Colors.blue,
+              color: Colors.green,
             ),
           ),
         ),

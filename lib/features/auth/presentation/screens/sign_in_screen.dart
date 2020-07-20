@@ -24,13 +24,13 @@ class _SignInScreenState extends State<SignInScreen> {
 
   final _emailDecoration = InputDecoration(
     labelText: 'Email',
-    labelStyle: TextStyle(fontSize: 20, color: Colors.white),
+    labelStyle: TextStyle(fontSize: 20, color: Colors.green),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.white),
+      borderSide: BorderSide(color: Colors.green),
       borderRadius: BorderRadius.circular(12),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1.4, color: Colors.white),
+      borderSide: BorderSide(width: 1.4, color: Colors.green),
       borderRadius: BorderRadius.circular(18),
     ),
     errorBorder: OutlineInputBorder(
@@ -38,20 +38,20 @@ class _SignInScreenState extends State<SignInScreen> {
       borderRadius: BorderRadius.circular(12),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1.4, color: Colors.white),
+      borderSide: BorderSide(width: 1.4, color: Colors.green),
       borderRadius: BorderRadius.circular(18),
     ),
   );
 
   final _passwordDecoration = InputDecoration(
     labelText: 'Password',
-    labelStyle: TextStyle(fontSize: 20, color: Colors.white),
+    labelStyle: TextStyle(fontSize: 20, color: Colors.green),
     enabledBorder: OutlineInputBorder(
-      borderSide: BorderSide(color: Colors.white),
+      borderSide: BorderSide(color: Colors.green),
       borderRadius: BorderRadius.circular(12),
     ),
     focusedBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1.4, color: Colors.white),
+      borderSide: BorderSide(width: 1.4, color: Colors.green),
       borderRadius: BorderRadius.circular(18),
     ),
     errorBorder: OutlineInputBorder(
@@ -59,7 +59,7 @@ class _SignInScreenState extends State<SignInScreen> {
       borderRadius: BorderRadius.circular(12),
     ),
     focusedErrorBorder: OutlineInputBorder(
-      borderSide: BorderSide(width: 1.4, color: Colors.white),
+      borderSide: BorderSide(width: 1.4, color: Colors.green),
       borderRadius: BorderRadius.circular(18),
     ),
   );
@@ -85,123 +85,116 @@ class _SignInScreenState extends State<SignInScreen> {
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      backgroundColor: Colors.green,
       resizeToAvoidBottomPadding: true,
-      body: ListView(
-        children: <Widget>[
-          SizedBox(height: screenHeight * 0.04),
-          Center(
-            child: Text(
-              'Danef Dictionary Admin Panel',
-              style: TextStyle(fontSize: 36, color: Colors.white),
-            ),
-          ),
-          SizedBox(height: screenHeight * 0.23),
-          Form(
-            key: _formKey,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: screenWidth * 0.02,
-              ),
-              child: Column(
-                children: <Widget>[
-                  Container(
-                    height: screenHeight * 0.08,
-                    child: TextFormField(
-                      validator: emailValidator,
-                      autofocus: false,
-                      controller: _emailController,
-                      textInputAction: TextInputAction.next,
-                      keyboardType: TextInputType.emailAddress,
-                      decoration: _emailDecoration,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                      onFieldSubmitted: (value) {
-                        _passwordFocusNode.requestFocus();
-                      },
-                      onSaved: (value) {
-                        setState(() {
-                          _email = value;
-                        });
-                      },
-                    ),
-                  ),
-                  SizedBox(height: screenHeight * 0.02),
-                  Container(
-                    height: screenHeight * 0.08,
-                    child: TextFormField(
-                      focusNode: _passwordFocusNode,
-                      controller: _passwordController,
-                      obscureText: true,
-                      decoration: _passwordDecoration,
-                      style: TextStyle(
-                        color: Colors.white,
-                        fontSize: 20,
-                      ),
-                      onSaved: (value) {
-                        setState(() {
-                          _password = value;
-                        });
-                      },
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-          SizedBox(height: screenHeight * 0.15),
-          GestureDetector(
-            child: Center(
+      body: Center(
+        child: ListView(
+          shrinkWrap: true,
+          children: <Widget>[
+            Center(
               child: Text(
-                'Sign up',
+                'Danef Dictionary Admin Panel',
                 style: TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
+                  fontSize: 32,
+                  color: Colors.green,
                 ),
               ),
             ),
-            // onTap: () => pushSignUpScreen(context),
-            onTap: null,
-          ),
-          SizedBox(height: screenHeight * 0.14),
-          Padding(
-            padding: EdgeInsets.only(
-              left: screenWidth * 0.01,
-              right: screenWidth * 0.01,
-              bottom: screenHeight * 0.015,
-            ),
-            child: ButtonTheme(
-              minWidth: double.infinity,
-              child: RaisedButton(
+            SizedBox(height: screenHeight * 0.05),
+            Form(
+              key: _formKey,
+              child: Padding(
                 padding: EdgeInsets.symmetric(
-                  vertical: screenHeight * 0.015,
+                  horizontal: screenWidth * 0.02,
                 ),
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(24),
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      width: screenWidth * 0.3,
+                      height: screenHeight * 0.08,
+                      child: TextFormField(
+                        validator: emailValidator,
+                        autofocus: false,
+                        controller: _emailController,
+                        textInputAction: TextInputAction.next,
+                        keyboardType: TextInputType.emailAddress,
+                        decoration: _emailDecoration,
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 20,
+                        ),
+                        onFieldSubmitted: (value) {
+                          _passwordFocusNode.requestFocus();
+                        },
+                        onSaved: (value) {
+                          setState(() {
+                            _email = value;
+                          });
+                        },
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    Container(
+                      width: screenWidth * 0.3,
+                      height: screenHeight * 0.08,
+                      child: TextFormField(
+                        focusNode: _passwordFocusNode,
+                        controller: _passwordController,
+                        obscureText: true,
+                        decoration: _passwordDecoration,
+                        style: TextStyle(
+                          color: Colors.green,
+                          fontSize: 20,
+                        ),
+                        onSaved: (value) {
+                          setState(() {
+                            _password = value;
+                          });
+                        },
+                      ),
+                    ),
+                  ],
                 ),
-                child: Padding(
-                  padding: EdgeInsets.only(
-                    top: screenHeight * 0.006,
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.05),
+            Padding(
+              padding: EdgeInsets.only(
+                left: screenWidth * 0.35,
+                right: screenWidth * 0.35,
+                bottom: screenHeight * 0.015,
+              ),
+              child: Container(
+                width: screenWidth * 0.3,
+                child: RaisedButton(
+                  padding: EdgeInsets.symmetric(
+                    vertical: screenHeight * 0.015,
+                  ),
+                  color: Colors.green,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(24),
                   ),
                   child: Padding(
-                    padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Text(
-                      'Sign in',
-                      style: TextStyle(
+                    padding: EdgeInsets.only(
+                      top: screenHeight * 0.006,
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 4.0),
+                      child: Text(
+                        'Sign in',
+                        style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.w700,
-                          color: Colors.white),
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   ),
+                  onPressed: _handleSignIn,
                 ),
-                onPressed: _handleSignIn,
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

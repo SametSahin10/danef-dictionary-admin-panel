@@ -1,9 +1,8 @@
 import 'dart:convert';
+import 'dart:html';
 
 import 'package:danef_dictionary_admin_panel/core/config/constants.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
-import 'dart:io' as io;
 
 abstract class UserRemoteDataSource {
   Future<String> signIn(String email, String password);
@@ -12,7 +11,7 @@ abstract class UserRemoteDataSource {
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   @override
   Future<String> signIn(String username, String password) async {
-    final baseUrl = DotEnv().env['BASE_URL'];
+    final baseUrl = Constants.baseUrl;
     final requestBody = {
       "email": "$username",
       "password": "$password",
@@ -21,10 +20,10 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
     try {
       final response = await http.post(
         url,
-        headers: {io.HttpHeaders.contentTypeHeader: 'application/json'},
+        headers: {"Content-Type": 'application/json'},
         body: json.encode(requestBody),
       );
-      if (response.statusCode == io.HttpStatus.ok) {
+      if (response.statusCode == HttpStatus.ok) {
         final responseBody = json.decode(response.body);
         final status = responseBody['status'];
         if (status == true) {
