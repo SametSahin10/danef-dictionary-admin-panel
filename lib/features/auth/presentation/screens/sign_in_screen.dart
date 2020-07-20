@@ -1,4 +1,5 @@
 import 'package:danef_dictionary_admin_panel/core/util/actions.dart';
+import 'package:danef_dictionary_admin_panel/home_page.dart';
 import 'package:flutter/material.dart';
 
 import '../../../../core/util/validators.dart';
@@ -223,7 +224,7 @@ class _SignInScreenState extends State<SignInScreen> {
       );
       if (token != null) {
         print("Signed in succesfully");
-        // TODO: push HomePage
+        _pushHomePage(context);
       } else {
         print("Signin in failed");
         // Hide progressDialog
@@ -235,4 +236,11 @@ class _SignInScreenState extends State<SignInScreen> {
       }
     }
   }
+}
+
+void _pushHomePage(BuildContext context) {
+  Navigator.of(context).pushAndRemoveUntil(
+    MaterialPageRoute(builder: (context) => HomePage()),
+    (route) => false,
+  );
 }
