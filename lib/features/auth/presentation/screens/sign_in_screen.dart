@@ -132,7 +132,6 @@ class _SignInScreenState extends State<SignInScreen> {
                         },
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.02),
                     Container(
                       width: screenWidth * 0.3,
                       height: screenHeight * 0.08,
@@ -156,7 +155,7 @@ class _SignInScreenState extends State<SignInScreen> {
                 ),
               ),
             ),
-            SizedBox(height: screenHeight * 0.05),
+            SizedBox(height: screenHeight * 0.01),
             Padding(
               padding: EdgeInsets.only(
                 left: screenWidth * 0.35,
