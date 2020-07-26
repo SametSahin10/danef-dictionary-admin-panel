@@ -1,9 +1,9 @@
-import 'package:danef_dictionary_admin_panel/core/util/actions.dart';
-import 'package:danef_dictionary_admin_panel/home_page.dart';
 import 'package:flutter/material.dart';
 
+import '../../../../core/util/actions.dart';
 import '../../../../core/util/validators.dart';
 import '../../../../injection_container.dart';
+import '../../../dashboard/presentation/screens/dashboard_screen.dart';
 import '../../domain/use_cases/sign_in_use_case.dart';
 
 class SignInScreen extends StatefulWidget {
@@ -216,7 +216,7 @@ class _SignInScreenState extends State<SignInScreen> {
       );
       if (token != null) {
         print("Signed in succesfully");
-        _pushHomePage(context);
+        _pushDashboardScreen(context);
       } else {
         print("Signin in failed");
         // Hide progressDialog
@@ -230,9 +230,9 @@ class _SignInScreenState extends State<SignInScreen> {
   }
 }
 
-void _pushHomePage(BuildContext context) {
+void _pushDashboardScreen(BuildContext context) {
   Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (context) => HomePage()),
+    MaterialPageRoute(builder: (context) => DashboardScreen()),
     (route) => false,
   );
 }
