@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
         visualDensity: VisualDensity.adaptivePlatformDensity,
         fontFamily: GoogleFonts.nunito().fontFamily,
       ),
-      home: DashboardScreen(),
+      home: SignInScreen(),
     );
   }
 }

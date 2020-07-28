@@ -1,3 +1,6 @@
+import 'dart:convert';
+import 'dart:html';
+
 import 'package:flutter/material.dart';
 
 void showProgressDialog({
@@ -10,12 +13,16 @@ void showProgressDialog({
     builder: (BuildContext context) {
       return AlertDialog(
         title: Center(
-          child: Text(
-            text,
-            style: TextStyle(
-              fontSize: 28,
-              color: Colors.green,
-            ),
+          child: Row(
+            children: [
+              Text(
+                text,
+                style: TextStyle(
+                  fontSize: 28,
+                  color: Colors.green,
+                ),
+              ),
+            ],
           ),
         ),
         shape: RoundedRectangleBorder(
@@ -47,6 +54,9 @@ void showSnackBar({
 void showAlertDialog({
   @required BuildContext context,
   @required String message,
+  @required bool showActions,
+  Function onYesPressed,
+  Function onNoPressed,
 }) async {
   return showDialog<void>(
     context: context,
@@ -66,6 +76,18 @@ void showAlertDialog({
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.all(Radius.circular(10)),
         ),
+        actions: showActions
+            ? [
+                FlatButton(
+                  onPressed: () => onYesPressed(context),
+                  child: Text("Yes"),
+                ),
+                FlatButton(
+                  onPressed: () => onNoPressed(context),
+                  child: Text("No"),
+                ),
+              ]
+            : null,
       );
     },
   );

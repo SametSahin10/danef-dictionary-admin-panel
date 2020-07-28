@@ -1,4 +1,7 @@
+import 'package:danef_dictionary_admin_panel/core/config/constants.dart';
+import 'package:danef_dictionary_admin_panel/core/util/navigation.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../core/util/actions.dart';
 import '../../../../core/util/validators.dart';
@@ -102,60 +105,55 @@ class _SignInScreenState extends State<SignInScreen> {
             SizedBox(height: screenHeight * 0.05),
             Form(
               key: _formKey,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: screenWidth * 0.02,
-                ),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      width: screenWidth * 0.3,
-                      height: screenHeight * 0.08,
-                      child: TextFormField(
-                        validator: emailValidator,
-                        autofocus: false,
-                        controller: _emailController,
-                        textInputAction: TextInputAction.next,
-                        keyboardType: TextInputType.emailAddress,
-                        decoration: _emailDecoration,
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 20,
-                        ),
-                        onFieldSubmitted: (value) {
-                          _passwordFocusNode.requestFocus();
-                        },
-                        onSaved: (value) {
-                          setState(() {
-                            _email = value;
-                          });
-                        },
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    width: screenWidth * 0.3,
+                    height: screenHeight * 0.08,
+                    child: TextFormField(
+                      validator: emailValidator,
+                      autofocus: false,
+                      controller: _emailController,
+                      textInputAction: TextInputAction.next,
+                      keyboardType: TextInputType.emailAddress,
+                      decoration: _emailDecoration,
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 20,
                       ),
+                      onFieldSubmitted: (value) {
+                        _passwordFocusNode.requestFocus();
+                      },
+                      onSaved: (value) {
+                        setState(() {
+                          _email = value;
+                        });
+                      },
                     ),
-                    Container(
-                      width: screenWidth * 0.3,
-                      height: screenHeight * 0.08,
-                      child: TextFormField(
-                        focusNode: _passwordFocusNode,
-                        controller: _passwordController,
-                        obscureText: true,
-                        decoration: _passwordDecoration,
-                        style: TextStyle(
-                          color: Colors.green,
-                          fontSize: 20,
-                        ),
-                        onSaved: (value) {
-                          setState(() {
-                            _password = value;
-                          });
-                        },
+                  ),
+                  Container(
+                    width: screenWidth * 0.3,
+                    height: screenHeight * 0.08,
+                    child: TextFormField(
+                      focusNode: _passwordFocusNode,
+                      controller: _passwordController,
+                      obscureText: true,
+                      decoration: _passwordDecoration,
+                      style: TextStyle(
+                        color: Colors.green,
+                        fontSize: 20,
                       ),
+                      onSaved: (value) {
+                        setState(() {
+                          _password = value;
+                        });
+                      },
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: screenHeight * 0.01),
+            SizedBox(height: screenHeight * 0.05),
             Padding(
               padding: EdgeInsets.only(
                 left: screenWidth * 0.35,
@@ -203,20 +201,22 @@ class _SignInScreenState extends State<SignInScreen> {
       setState(() {
         showProgressDialog(
           context: context,
-          text: "Signing in",
+          text: "Signing in...",
         );
       });
       _formKey.currentState.save();
       final signInUseCase = sl<SignInUseCase>();
-      final token = await signInUseCase.call(
+      final jwtToken = await signInUseCase.call(
         UserParams(
           email: _email.trim(),
           password: _password.trim(),
         ),
       );
-      if (token != null) {
+      if (jwtToken != null) {
         print("Signed in succesfully");
-        _pushDashboardScreen(context);
+        // TODO: Use clean architecture.
+        await saveTokenInSharedPrefs(jwtToken);
+        pushDashboardScreen(context);
       } else {
         print("Signin in failed");
         // Hide progressDialog
@@ -224,15 +224,17 @@ class _SignInScreenState extends State<SignInScreen> {
         showAlertDialog(
           context: context,
           message: "Signing in failed. Check your email and password.",
+          showActions: false,
         );
       }
     }
   }
 }
 
-void _pushDashboardScreen(BuildContext context) {
-  Navigator.of(context).pushAndRemoveUntil(
-    MaterialPageRoute(builder: (context) => DashboardScreen()),
-    (route) => false,
+Future<bool> saveTokenInSharedPrefs(String jwtToken) async {
+  final sharedPreferences = await SharedPreferences.getInstance();
+  return await sharedPreferences.setString(
+    Constants.jwtTokenString,
+    jwtToken,
   );
 }
