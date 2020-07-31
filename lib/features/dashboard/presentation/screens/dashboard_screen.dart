@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:js';
 
+import 'package:danef_dictionary_admin_panel/core/util/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -17,11 +18,11 @@ class DashboardScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Center(
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: screenWidth * 0.2,
+              width: screenWidth * 0.25,
               height: screenHeight * 0.1,
               child: RaisedButton(
                 padding: EdgeInsets.symmetric(
@@ -37,12 +38,18 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Text(
-                      'Upload words',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.file_upload,
                         color: Colors.white,
+                      ),
+                      title: Text(
+                        'Upload words',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -50,9 +57,9 @@ class DashboardScreen extends StatelessWidget {
                 onPressed: () => handleUploadWords(context),
               ),
             ),
-            SizedBox(width: screenWidth * 0.01),
+            SizedBox(height: screenHeight * 0.01),
             Container(
-              width: screenWidth * 0.2,
+              width: screenWidth * 0.25,
               height: screenHeight * 0.1,
               child: RaisedButton(
                 padding: EdgeInsets.symmetric(
@@ -68,17 +75,60 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Text(
-                      'Delete all words',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.delete_forever,
                         color: Colors.white,
+                      ),
+                      title: Text(
+                        'Delete all words',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 onPressed: () => handleDeleteAllWords(context),
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            Container(
+              width: screenWidth * 0.25,
+              height: screenHeight * 0.1,
+              child: RaisedButton(
+                padding: EdgeInsets.symmetric(
+                  vertical: screenHeight * 0.015,
+                ),
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: screenHeight * 0.006,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        'Log out',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                onPressed: () => handleLogout(context),
               ),
             ),
           ],
@@ -224,7 +274,17 @@ void onNoPressed(BuildContext context) {
   Navigator.of(context).pop();
 }
 
+Future<void> handleLogout(BuildContext context) async {
+  await removeTokenFromSharedPrefs();
+  pushSignInScreen(context);
+}
+
 Future<String> getTokenFromSharedPrefs() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   return sharedPreferences.getString(Constants.jwtTokenString);
+}
+
+Future<bool> removeTokenFromSharedPrefs() async {
+  final sharedPreferences = await SharedPreferences.getInstance();
+  return await sharedPreferences.clear();
 }
