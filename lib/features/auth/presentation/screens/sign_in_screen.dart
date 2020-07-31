@@ -213,12 +213,12 @@ class _SignInScreenState extends State<SignInScreen> {
         ),
       );
       if (jwtToken != null) {
-        print("Signed in succesfully");
+        debugPrint("Signed in succesfully");
         // TODO: Use clean architecture.
         await saveTokenInSharedPrefs(jwtToken);
         pushDashboardScreen(context);
       } else {
-        print("Signin in failed");
+        debugPrint("Signin in failed");
         // Hide progressDialog
         Navigator.of(context).pop();
         showAlertDialog(

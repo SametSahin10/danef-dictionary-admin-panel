@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:html';
 import 'dart:js';
 
+import 'package:danef_dictionary_admin_panel/core/util/navigation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:http_parser/http_parser.dart';
@@ -17,11 +18,11 @@ class DashboardScreen extends StatelessWidget {
     final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       body: Center(
-        child: Row(
+        child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Container(
-              width: screenWidth * 0.2,
+              width: screenWidth * 0.25,
               height: screenHeight * 0.1,
               child: RaisedButton(
                 padding: EdgeInsets.symmetric(
@@ -37,12 +38,18 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Text(
-                      'Upload words',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.file_upload,
                         color: Colors.white,
+                      ),
+                      title: Text(
+                        'Upload words',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -50,9 +57,9 @@ class DashboardScreen extends StatelessWidget {
                 onPressed: () => handleUploadWords(context),
               ),
             ),
-            SizedBox(width: screenWidth * 0.01),
+            SizedBox(height: screenHeight * 0.01),
             Container(
-              width: screenWidth * 0.2,
+              width: screenWidth * 0.25,
               height: screenHeight * 0.1,
               child: RaisedButton(
                 padding: EdgeInsets.symmetric(
@@ -68,17 +75,60 @@ class DashboardScreen extends StatelessWidget {
                   ),
                   child: Padding(
                     padding: const EdgeInsets.only(bottom: 4.0),
-                    child: Text(
-                      'Delete all words',
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w700,
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.delete_forever,
                         color: Colors.white,
+                      ),
+                      title: Text(
+                        'Delete all words',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
                 onPressed: () => handleDeleteAllWords(context),
+              ),
+            ),
+            SizedBox(height: screenHeight * 0.01),
+            Container(
+              width: screenWidth * 0.25,
+              height: screenHeight * 0.1,
+              child: RaisedButton(
+                padding: EdgeInsets.symmetric(
+                  vertical: screenHeight * 0.015,
+                ),
+                color: Colors.blue,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(18),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.only(
+                    top: screenHeight * 0.006,
+                  ),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 4.0),
+                    child: ListTile(
+                      leading: Icon(
+                        Icons.arrow_back,
+                        color: Colors.white,
+                      ),
+                      title: Text(
+                        'Log out',
+                        style: TextStyle(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w700,
+                          color: Colors.white,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+                onPressed: () => handleLogout(context),
               ),
             ),
           ],
@@ -109,16 +159,18 @@ Future<void> startFilePicker(BuildContext context) {
     final files = uploadInput.files;
     if (files.length == 1) {
       final file = files[0];
-      final reader = FileReader();
-      reader.onLoadEnd.listen((event) async {
-        print("finished loading file");
-        print("file.name: ${file.name}");
+      final fileReader = FileReader();
+      fileReader.onLoadEnd.listen((event) async {
+        debugPrint("finished loading file");
+        debugPrint("file.name: ${file.name}");
+        final splitResult = (fileReader.result as String).split(",");
+        final base64Part = splitResult[1];
         final response = await uploadFileToServer(
           file.name,
-          utf8.encode(reader.result),
+          base64.decode(base64Part),
         );
-        print("statusCode: ${response?.statusCode}");
-        print("response.body: ${response?.body}");
+        debugPrint("statusCode: ${response?.statusCode}");
+        debugPrint("response.body: ${response?.body}");
         String alertDialogMessage;
         if (response == null) {
           alertDialogMessage =
@@ -132,7 +184,7 @@ Future<void> startFilePicker(BuildContext context) {
           showActions: false,
         );
       });
-      reader.readAsDataUrl(file);
+      fileReader.readAsDataUrl(file);
     }
   });
 }
@@ -142,7 +194,7 @@ Future<http.Response> uploadFileToServer(
   List<int> fileAsBytes,
 ) async {
   // TODO: Use clean architecture.
-  print("Uploading file to server");
+  debugPrint("Uploading file to server");
   final fileUploadUrlString = Constants.baseUrl + Constants.uploadWordsString;
   final request = http.MultipartRequest(
     "POST",
@@ -161,8 +213,8 @@ Future<http.Response> uploadFileToServer(
     final streamedResponse = await request.send();
     return await http.Response.fromStream(streamedResponse);
   } catch (err) {
-    print("exception occured while uploading file to server");
-    print("err: $err");
+    debugPrint("exception occured while uploading file to server");
+    debugPrint("err: $err");
     return null;
   }
 }
@@ -180,33 +232,31 @@ Future<bool> deleteWordsFromDatabase(BuildContext context) async {
       final responseBody = json.decode(response.body);
       final status = responseBody['status'];
       if (status == true) {
-        print('Deleted words succesfully');
-        print('status code ${response.statusCode}');
-        print('response body: ${response.body}');
+        debugPrint('Deleted words succesfully');
+        debugPrint('status code ${response.statusCode}');
+        debugPrint('response body: ${response.body}');
       } else {
-        print('Deleting words failed');
-        print('status code ${response.statusCode}');
-        print('response body: ${response.body}');
+        debugPrint('Deleting words failed');
+        debugPrint('status code ${response.statusCode}');
+        debugPrint('response body: ${response.body}');
       }
       return status;
     } else {
-      print('Signing in failed');
-      print('status code ${response.statusCode}');
-      print('response body: ${response.body}');
+      debugPrint('Signing in failed');
+      debugPrint('status code ${response.statusCode}');
+      debugPrint('response body: ${response.body}');
       return false;
     }
   } catch (err) {
-    print("exception occured while deleting words");
-    print("err: $err");
+    debugPrint("exception occured while deleting words");
+    debugPrint("err: $err");
     return false;
   }
 }
 
 void onYesPressed(BuildContext context) async {
-  print("Yes pressed");
   final success = await deleteWordsFromDatabase(context);
   String alertDialogMessage;
-  print("success: $success");
   if (success) {
     alertDialogMessage = "Deleted words successfully";
   } else {
@@ -221,11 +271,20 @@ void onYesPressed(BuildContext context) async {
 }
 
 void onNoPressed(BuildContext context) {
-  print("No pressed");
   Navigator.of(context).pop();
+}
+
+Future<void> handleLogout(BuildContext context) async {
+  await removeTokenFromSharedPrefs();
+  pushSignInScreen(context);
 }
 
 Future<String> getTokenFromSharedPrefs() async {
   final sharedPreferences = await SharedPreferences.getInstance();
   return sharedPreferences.getString(Constants.jwtTokenString);
+}
+
+Future<bool> removeTokenFromSharedPrefs() async {
+  final sharedPreferences = await SharedPreferences.getInstance();
+  return await sharedPreferences.clear();
 }
