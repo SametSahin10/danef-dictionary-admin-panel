@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:html';
 
 import 'package:danef_dictionary_admin_panel/core/config/constants.dart';
+import 'package:flutter/widgets.dart';
 import 'package:http/http.dart' as http;
 
 abstract class UserRemoteDataSource {
@@ -27,26 +28,26 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         final responseBody = json.decode(response.body);
         final status = responseBody['status'];
         if (status == true) {
-          print('Signed in succesfully');
-          print('status code ${response.statusCode}');
-          print('response body: ${response.body}');
+          debugPrint('Signed in succesfully');
+          debugPrint('status code ${response.statusCode}');
+          debugPrint('response body: ${response.body}');
           final token = responseBody['account']['token'];
-          print('token: $token');
+          debugPrint('token: $token');
           return token;
         } else {
-          print('Signing in failed');
-          print('status code ${response.statusCode}');
-          print('response body: ${response.body}');
+          debugPrint('Signing in failed');
+          debugPrint('status code ${response.statusCode}');
+          debugPrint('response body: ${response.body}');
           return null;
         }
       } else {
-        print('Signing in failed');
-        print('status code ${response.statusCode}');
-        print('response body: ${response.body}');
+        debugPrint('Signing in failed');
+        debugPrint('status code ${response.statusCode}');
+        debugPrint('response body: ${response.body}');
         return null;
       }
     } catch (e) {
-      print('exception occured while signing in ${e.toString()}');
+      debugPrint('exception occured while signing in ${e.toString()}');
       return null;
     }
   }

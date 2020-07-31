@@ -111,28 +111,28 @@ Future<void> startFilePicker(BuildContext context) {
       final file = files[0];
       final fileReader = FileReader();
       fileReader.onLoadEnd.listen((event) async {
-        print("finished loading file");
-        print("file.name: ${file.name}");
+        debugPrint("finished loading file");
+        debugPrint("file.name: ${file.name}");
         final splitResult = (fileReader.result as String).split(",");
         final base64Part = splitResult[1];
-         final response = await uploadFileToServer(
-           file.name,
-           base64.decode(base64Part),
-         );
-         print("statusCode: ${response?.statusCode}");
-         print("response.body: ${response?.body}");
-         String alertDialogMessage;
-         if (response == null) {
-           alertDialogMessage =
-               "Error occured while either uploading file or inserting words";
-         } else {
-           alertDialogMessage = "Uploading file successful";
-         }
-         showAlertDialog(
-           context: context,
-           message: alertDialogMessage,
-           showActions: false,
-         );
+        final response = await uploadFileToServer(
+          file.name,
+          base64.decode(base64Part),
+        );
+        debugPrint("statusCode: ${response?.statusCode}");
+        debugPrint("response.body: ${response?.body}");
+        String alertDialogMessage;
+        if (response == null) {
+          alertDialogMessage =
+              "Error occured while either uploading file or inserting words";
+        } else {
+          alertDialogMessage = "Uploading file successful";
+        }
+        showAlertDialog(
+          context: context,
+          message: alertDialogMessage,
+          showActions: false,
+        );
       });
       fileReader.readAsDataUrl(file);
     }
@@ -144,7 +144,7 @@ Future<http.Response> uploadFileToServer(
   List<int> fileAsBytes,
 ) async {
   // TODO: Use clean architecture.
-  print("Uploading file to server");
+  debugPrint("Uploading file to server");
   final fileUploadUrlString = Constants.baseUrl + Constants.uploadWordsString;
   final request = http.MultipartRequest(
     "POST",
@@ -163,8 +163,8 @@ Future<http.Response> uploadFileToServer(
     final streamedResponse = await request.send();
     return await http.Response.fromStream(streamedResponse);
   } catch (err) {
-    print("exception occured while uploading file to server");
-    print("err: $err");
+    debugPrint("exception occured while uploading file to server");
+    debugPrint("err: $err");
     return null;
   }
 }
@@ -182,33 +182,31 @@ Future<bool> deleteWordsFromDatabase(BuildContext context) async {
       final responseBody = json.decode(response.body);
       final status = responseBody['status'];
       if (status == true) {
-        print('Deleted words succesfully');
-        print('status code ${response.statusCode}');
-        print('response body: ${response.body}');
+        debugPrint('Deleted words succesfully');
+        debugPrint('status code ${response.statusCode}');
+        debugPrint('response body: ${response.body}');
       } else {
-        print('Deleting words failed');
-        print('status code ${response.statusCode}');
-        print('response body: ${response.body}');
+        debugPrint('Deleting words failed');
+        debugPrint('status code ${response.statusCode}');
+        debugPrint('response body: ${response.body}');
       }
       return status;
     } else {
-      print('Signing in failed');
-      print('status code ${response.statusCode}');
-      print('response body: ${response.body}');
+      debugPrint('Signing in failed');
+      debugPrint('status code ${response.statusCode}');
+      debugPrint('response body: ${response.body}');
       return false;
     }
   } catch (err) {
-    print("exception occured while deleting words");
-    print("err: $err");
+    debugPrint("exception occured while deleting words");
+    debugPrint("err: $err");
     return false;
   }
 }
 
 void onYesPressed(BuildContext context) async {
-  print("Yes pressed");
   final success = await deleteWordsFromDatabase(context);
   String alertDialogMessage;
-  print("success: $success");
   if (success) {
     alertDialogMessage = "Deleted words successfully";
   } else {
@@ -223,7 +221,6 @@ void onYesPressed(BuildContext context) async {
 }
 
 void onNoPressed(BuildContext context) {
-  print("No pressed");
   Navigator.of(context).pop();
 }
 
