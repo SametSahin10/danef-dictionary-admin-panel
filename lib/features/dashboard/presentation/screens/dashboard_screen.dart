@@ -109,30 +109,32 @@ Future<void> startFilePicker(BuildContext context) {
     final files = uploadInput.files;
     if (files.length == 1) {
       final file = files[0];
-      final reader = FileReader();
-      reader.onLoadEnd.listen((event) async {
+      final fileReader = FileReader();
+      fileReader.onLoadEnd.listen((event) async {
         print("finished loading file");
         print("file.name: ${file.name}");
-        final response = await uploadFileToServer(
-          file.name,
-          utf8.encode(reader.result),
-        );
-        print("statusCode: ${response?.statusCode}");
-        print("response.body: ${response?.body}");
-        String alertDialogMessage;
-        if (response == null) {
-          alertDialogMessage =
-              "Error occured while either uploading file or inserting words";
-        } else {
-          alertDialogMessage = "Uploading file successful";
-        }
-        showAlertDialog(
-          context: context,
-          message: alertDialogMessage,
-          showActions: false,
-        );
+        final splitResult = (fileReader.result as String).split(",");
+        final base64Part = splitResult[1];
+         final response = await uploadFileToServer(
+           file.name,
+           base64.decode(base64Part),
+         );
+         print("statusCode: ${response?.statusCode}");
+         print("response.body: ${response?.body}");
+         String alertDialogMessage;
+         if (response == null) {
+           alertDialogMessage =
+               "Error occured while either uploading file or inserting words";
+         } else {
+           alertDialogMessage = "Uploading file successful";
+         }
+         showAlertDialog(
+           context: context,
+           message: alertDialogMessage,
+           showActions: false,
+         );
       });
-      reader.readAsDataUrl(file);
+      fileReader.readAsDataUrl(file);
     }
   });
 }
