@@ -30,20 +30,16 @@ class UserRemoteDataSourceImpl implements UserRemoteDataSource {
         if (status == true) {
           debugPrint('Signed in succesfully');
           debugPrint('status code ${response.statusCode}');
-          debugPrint('response body: ${response.body}');
           final token = responseBody['account']['token'];
-          debugPrint('token: $token');
           return token;
         } else {
           debugPrint('Signing in failed');
           debugPrint('status code ${response.statusCode}');
-          debugPrint('response body: ${response.body}');
           return null;
         }
       } else {
         debugPrint('Signing in failed');
         debugPrint('status code ${response.statusCode}');
-        debugPrint('response body: ${response.body}');
         return null;
       }
     } catch (e) {

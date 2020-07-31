@@ -170,7 +170,6 @@ Future<void> startFilePicker(BuildContext context) {
           base64.decode(base64Part),
         );
         debugPrint("statusCode: ${response?.statusCode}");
-        debugPrint("response.body: ${response?.body}");
         String alertDialogMessage;
         if (response == null) {
           alertDialogMessage =
@@ -234,17 +233,14 @@ Future<bool> deleteWordsFromDatabase(BuildContext context) async {
       if (status == true) {
         debugPrint('Deleted words succesfully');
         debugPrint('status code ${response.statusCode}');
-        debugPrint('response body: ${response.body}');
       } else {
         debugPrint('Deleting words failed');
         debugPrint('status code ${response.statusCode}');
-        debugPrint('response body: ${response.body}');
       }
       return status;
     } else {
       debugPrint('Signing in failed');
       debugPrint('status code ${response.statusCode}');
-      debugPrint('response body: ${response.body}');
       return false;
     }
   } catch (err) {
